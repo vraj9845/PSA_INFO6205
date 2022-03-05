@@ -30,19 +30,19 @@ public class Newton {
      * Method to solve this Newton problem.
      *
      * @param x0        the initial estimate of x.
-     *                  If this is too far from any root, the solution may not converge.
+     *                  If this is too far from any root, the solution may not converge. (|r|<1)
      * @param maxTries  the maximum number of tries before admitting defeat due to non-convergence.
      * @param tolerance the required precision for the value of f(x) to be considered equal to zero.
      * @return either a Double (the actual root) or a String explaining why no root could be found.
      */
     public Either<String, Double> solve(final double x0, final int maxTries, final double tolerance) {
-        double x = x0;
-        int tries = maxTries;
-        for (; tries > 0; tries--)
+        double input = x0;
+        int temp = maxTries;
+        for (; temp > 0; temp--)
             try {
-                final double y = f.apply(x);
-                if (Math.abs(y) < tolerance) return Either.right(x);
-                x = x - y / dfbydx.apply(x);
+                final double y = f.apply(input);
+                if (Math.abs(y) < tolerance) return Either.right(input);
+                input = input - y / dfbydx.apply(input);
             } catch (Exception e) {
                 return Either.left("Exception thrown solving " + equation + "=0, given x0=" + x0 + ", maxTries=" + maxTries + ", and tolerance=" + tolerance + " because " + e.getLocalizedMessage());
             }
@@ -57,7 +57,7 @@ public class Newton {
         // Solve the problem starting with a value of x = 1;
         // requiring a precision of 10^-7;
         // and giving up after 200 tries.
-        Either<String, Double> result = newton.solve(1.0, 200, 1E-7);
+        Either<String, Double> result = newton.solve(2.0, 200, 1E-7);
 
         // Process the result
         result.apply(
